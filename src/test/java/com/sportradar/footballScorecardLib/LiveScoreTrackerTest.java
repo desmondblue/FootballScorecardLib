@@ -16,7 +16,7 @@ class LiveScoreTrackerTest {
 	private ILiveScoreTracker scoreTracker;
 	private LinkedHashSet<Match> scoreBoard;
 	private static final Match MATCH_1 = new Match("Mexico","Canada",5,4);
-	private static final Match MATCH_2 = new Match("Spain","Argentina",0,1);
+	private static final Match MATCH_2 = new Match("Spain","Moldova",0,1);
 
 	@BeforeEach
 	void setup() {
@@ -40,6 +40,55 @@ class LiveScoreTrackerTest {
 	void shouldFailToStartMatchIfEitherOfTheTeamIsAlreadyPlaying() {
 		String result = scoreTracker.startMatch("Mexico","Nepal");
 		assertEquals(result, "Failed to start match: Either or Both Team(s) are already playing");
+	}
+
+	@Test
+	void shouldFailToStartMatchIfEmptyString() {
+		String result = scoreTracker.startMatch("Mexico","");
+		assertEquals(result, "Incorrect value passed for team names.");
+	}
+	@Test
+	void shouldFailToStartMatchIfNull() {
+		String result = scoreTracker.startMatch("Mexico",null);
+		assertEquals(result, "Incorrect value passed for team names.");
+	}
+
+	@Test
+	void shouldFinishMatch() {
+		String result = scoreTracker.finishMatch(MATCH_1);
+		assertEquals(result, "Successfully finished match.");
+		assertEquals(this.scoreBoard.size(),3);
+	}
+
+	@Test
+	void shouldFailToFinishMatchIfNotExists() {
+		String result = scoreTracker.finishMatch(MATCH_2);
+		assertEquals(result, "Failed to finish match: Match does not exist.");
+	}
+
+	@Test
+	void shouldUpdateMatchScore() {
+		String result = scoreTracker.updateMatchScore(MATCH_1,12,14);
+		assertEquals(result, "Successfully updated match score. Mexico 12 - Canada 14");
+		assertEquals(this.scoreBoard.size(),4);
+	}
+
+	@Test
+	void shouldFailToUpdateMatchScore() {
+		String result = scoreTracker.updateMatchScore(MATCH_2,3,5);
+		assertEquals(result, "Failed to update match score: Match does not exist.");
+	}
+
+	@Test
+	void shouldFailToUpdateMatchScoreWithNullValue() {
+		String result = scoreTracker.updateMatchScore(MATCH_1,null,5);
+		assertEquals(result, "Failed to update match score: Scores cannot be less than existing values or null.");
+	}
+
+	@Test
+	void shouldFailToUpdateMatchScoreWithNegativeValues() {
+		String result = scoreTracker.updateMatchScore(MATCH_1,-2,5);
+		assertEquals(result, "Failed to update match score: Scores cannot be less than existing values or null.");
 	}
 
 }

@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 public class LiveScoreTracker implements ILiveScoreTracker{
 
-    private LinkedHashSet<Match> scoreboard = new LinkedHashSet();
+    private LinkedHashSet<Match> scoreboard = new LinkedHashSet<>();
 
     public void setScoreboard(LinkedHashSet<Match> scoreboard) {
         this.scoreboard = scoreboard;
@@ -18,10 +18,13 @@ public class LiveScoreTracker implements ILiveScoreTracker{
 
     @Override
     public String startMatch(String homeTeam, String awayTeam) {
+        if (homeTeam == null || homeTeam.equals("") || awayTeam == null || awayTeam.equals("")) {
+            return "Incorrect value passed for team names.";
+        }
         Match match = new Match(homeTeam, awayTeam, 0, 0);
         if(validateStartMatch(match)) {
             scoreboard.add(match);
-            return "Match started "+homeTeam+ " vs " +awayTeam;
+            return "Match started " + homeTeam + " vs " + awayTeam;
         } else {
             return "Failed to start match: Either or Both Team(s) are already playing";
         }
@@ -29,14 +32,23 @@ public class LiveScoreTracker implements ILiveScoreTracker{
 
     @Override
     public String finishMatch(Match match) {
-//        TODO: TBD
-        return "";
+        if(this.scoreboard.remove(match)) {
+            return "Successfully finished match.";
+        } else {
+            return "Failed to finish match: Match does not exist.";
+        }
     }
 
     @Override
     public String updateMatchScore(Match match, Integer homeTeamScore, Integer awayTeamScore) {
-//        TODO: TBD
-        return "";
+        if(this.scoreboard.contains(match)) {
+            match.setAwayTeamScore(awayTeamScore);
+            match.setHomeTeamScore(homeTeamScore);
+            this.scoreboard.add(match);
+            return "Successfully updated match score. " + match;
+        } else {
+            return "Failed to update match score: Match does not exist.";
+        }
     }
 
     @Override

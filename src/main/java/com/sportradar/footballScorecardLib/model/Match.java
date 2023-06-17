@@ -70,4 +70,14 @@ public class Match {
 
     }
 
+    @Override
+    public int hashCode() {
+        return 37 + homeTeam.hashCode() + awayTeam.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.homeTeam + " " + this.homeTeamScore + " - " + this.awayTeam + " " + this.awayTeamScore;
+    }
+
 }
