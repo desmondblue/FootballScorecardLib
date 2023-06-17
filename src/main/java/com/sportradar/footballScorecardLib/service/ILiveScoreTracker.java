@@ -3,6 +3,7 @@ package com.sportradar.footballScorecardLib.service;
 import com.sportradar.footballScorecardLib.model.Match;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 /**
  * A {@link ILiveScoreTracker} tracks live score for world cup football matches.
@@ -20,4 +21,5 @@ public interface ILiveScoreTracker {
     String finishMatch(Match match);
     String updateMatchScore(Match match, Integer homeTeamScore, Integer awayTeamScore);
     ArrayList<Match> getSummary();
+    void setScoreboard(LinkedHashSet<Match> scoreBoard);
 }
